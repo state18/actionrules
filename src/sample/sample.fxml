@@ -1,0 +1,54 @@
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.GridPane?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ListView?>
+<GridPane fx:controller="sample.Controller"
+          xmlns:fx="http://javafx.com/fxml" alignment="TOP_LEFT" hgap="10" vgap="10">
+    <padding><Insets top="25" right="25" bottom="25" left="25" /></padding>
+
+    <Label GridPane.rowIndex="0" GridPane.columnIndex="0" text="Data File Path:" />
+    <TextField GridPane.rowIndex="0" GridPane.columnIndex="1" minWidth="200" id="InputDataFile" fx:id="inputDataFile" />
+
+    <Label GridPane.rowIndex="1" GridPane.columnIndex="0" text="Name File Path:" />
+    <TextField GridPane.rowIndex="1" GridPane.columnIndex="1" minWidth="200" id="InputNameFile" fx:id="inputNameFile" />
+
+    <Label GridPane.rowIndex="2" GridPane.columnIndex="0" text="Delimiter:" />
+    <ComboBox GridPane.rowIndex="2" GridPane.columnIndex="1" minWidth="100" fx:id="delimiterBox"  />
+
+    <Button GridPane.rowIndex="2" GridPane.columnIndex="2" text="Load input files" onAction="#loadInputs"/>
+
+
+
+    <Label GridPane.rowIndex="4" GridPane.columnIndex="0" text="Support:" />
+    <TextField GridPane.rowIndex="4" GridPane.columnIndex="1" maxWidth="100" fx:id="supportTextField" />
+    <Label GridPane.rowIndex="5" GridPane.columnIndex="0" text="Confidence (%):" />
+    <TextField GridPane.rowIndex="5" GridPane.columnIndex="1" maxWidth="100" fx:id="confTextField" />
+
+    <Label GridPane.rowIndex="4" GridPane.columnIndex="2" text="Decision Attribute" />
+    <TextField GridPane.rowIndex="4" GridPane.columnIndex="3" maxWidth="100"  fx:id="decAttributeTextField" />
+
+    <Label GridPane.rowIndex="5" GridPane.columnIndex="2" text="From value:" />
+    <ComboBox GridPane.rowIndex="5" GridPane.columnIndex="3" maxWidth="100"  fx:id="decValueFromBox" />
+
+    <Label GridPane.rowIndex="6" GridPane.columnIndex="2" text="To value:" />
+    <ComboBox GridPane.rowIndex="6" GridPane.columnIndex="3" maxWidth="100"  fx:id="decValueToBox" />
+
+
+    <Label GridPane.rowIndex="6" GridPane.columnIndex="0" text="Stable Attributes:" />
+    <ListView GridPane.rowIndex="6" GridPane.columnIndex="1" maxHeight="100" maxWidth="200" fx:id="stableListView" />
+
+    <Label GridPane.rowIndex="7" GridPane.columnIndex="0" text="Output File Path:" />
+    <TextField GridPane.rowIndex="7" GridPane.columnIndex="1" minWidth="200" id="OutputDataFile" fx:id="outputDataFile" />
+
+
+    <Button GridPane.rowIndex="7" GridPane.columnIndex="3" text="Compute Action Rules" onAction="#runLERS"/>
+
+</GridPane>
