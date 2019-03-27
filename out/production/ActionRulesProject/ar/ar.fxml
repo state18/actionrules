@@ -10,7 +10,7 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ListView?>
-<GridPane fx:controller="sample.Controller"
+<GridPane fx:controller="ar.Controller"
           xmlns:fx="http://javafx.com/fxml" alignment="TOP_LEFT" hgap="10" vgap="10">
     <padding><Insets top="25" right="25" bottom="25" left="25" /></padding>
 
@@ -27,19 +27,19 @@
 
 
 
-    <Label GridPane.rowIndex="4" GridPane.columnIndex="0" text="Support:" />
+    <Label GridPane.rowIndex="4" GridPane.columnIndex="0" text="Min. Support:" />
     <TextField GridPane.rowIndex="4" GridPane.columnIndex="1" maxWidth="100" fx:id="supportTextField" />
-    <Label GridPane.rowIndex="5" GridPane.columnIndex="0" text="Confidence (%):" />
+    <Label GridPane.rowIndex="5" GridPane.columnIndex="0" text="Min. Confidence (%):" />
     <TextField GridPane.rowIndex="5" GridPane.columnIndex="1" maxWidth="100" fx:id="confTextField" />
 
     <Label GridPane.rowIndex="4" GridPane.columnIndex="2" text="Decision Attribute" />
-    <TextField GridPane.rowIndex="4" GridPane.columnIndex="3" maxWidth="100"  fx:id="decAttributeTextField" />
+    <ComboBox GridPane.rowIndex="4" GridPane.columnIndex="3" maxWidth="100"  fx:id="decAttributeComboBox" />
 
     <Label GridPane.rowIndex="5" GridPane.columnIndex="2" text="From value:" />
-    <ComboBox GridPane.rowIndex="5" GridPane.columnIndex="3" maxWidth="100"  fx:id="decValueFromBox" />
+    <TextField GridPane.rowIndex="5" GridPane.columnIndex="3" maxWidth="100"  fx:id="decValueFromTextField" />
 
     <Label GridPane.rowIndex="6" GridPane.columnIndex="2" text="To value:" />
-    <ComboBox GridPane.rowIndex="6" GridPane.columnIndex="3" maxWidth="100"  fx:id="decValueToBox" />
+    <TextField GridPane.rowIndex="6" GridPane.columnIndex="3" maxWidth="100"  fx:id="decValueToTextField" />
 
 
     <Label GridPane.rowIndex="6" GridPane.columnIndex="0" text="Stable Attributes:" />

@@ -1,0 +1,48 @@
+
+-- Computing LERS! --
+
+
+-- Iteration 1 --
+
+- CERTAIN RULES -
+(a - 2 ) -> c - 2 *** SUPPORT: 2 *** CONFIDENCE: 100.00 percent
+(f - 1 ) -> c - 2 *** SUPPORT: 2 *** CONFIDENCE: 100.00 percent
+(g - 3 ) -> c - 2 *** SUPPORT: 2 *** CONFIDENCE: 100.00 percent
+
+- POSSIBLE RULES -
+(a - 1 ) -> c - 1 *** SUPPORT: 2 *** CONFIDENCE: 50.00 percent
+(a - 1 ) -> c - 2 *** SUPPORT: 2 *** CONFIDENCE: 50.00 percent
+(f - 2 ) -> c - 1 *** SUPPORT: 2 *** CONFIDENCE: 50.00 percent
+(f - 2 ) -> c - 2 *** SUPPORT: 2 *** CONFIDENCE: 50.00 percent
+(g - 1 ) -> c - 1 *** SUPPORT: 1 *** CONFIDENCE: 50.00 percent
+(g - 1 ) -> c - 2 *** SUPPORT: 1 *** CONFIDENCE: 50.00 percent
+(g - 2 ) -> c - 1 *** SUPPORT: 1 *** CONFIDENCE: 50.00 percent
+(g - 2 ) -> c - 2 *** SUPPORT: 1 *** CONFIDENCE: 50.00 percent
+
+-- Iteration 2 --
+
+- CERTAIN RULES -
+(a - 1, g - 2 ) -> c - 1 *** SUPPORT: 1 *** CONFIDENCE: 100.00 percent
+(f - 2, g - 1 ) -> c - 1 *** SUPPORT: 1 *** CONFIDENCE: 100.00 percent
+
+- POSSIBLE RULES -
+(a - 1, f - 2 ) -> c - 1 *** SUPPORT: 2 *** CONFIDENCE: 66.67 percent
+(a - 1, g - 1 ) -> c - 1 *** SUPPORT: 1 *** CONFIDENCE: 50.00 percent
+(a - 1, g - 1 ) -> c - 2 *** SUPPORT: 1 *** CONFIDENCE: 50.00 percent
+(f - 2, g - 2 ) -> c - 1 *** SUPPORT: 1 *** CONFIDENCE: 50.00 percent
+(f - 2, g - 2 ) -> c - 2 *** SUPPORT: 1 *** CONFIDENCE: 50.00 percent
+
+-- Iteration 3 --
+
+- CERTAIN RULES -
+
+- POSSIBLE RULES -
+No more extraction can be done!
+
+-- Computing Action Rules! --
+
+
+-- ACTION RULES --
+
+(a: 2 -> 1, g = 2 ) -> (c: 2 -> 1)
+(f: 1 -> 2, g = 1 ) -> (c: 2 -> 1)

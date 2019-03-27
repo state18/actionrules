@@ -1,0 +1,6 @@
+BI-RADS assessment
+Age
+Shape
+Margin
+Density
+Severity

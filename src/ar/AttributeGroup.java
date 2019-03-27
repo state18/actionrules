@@ -1,8 +1,5 @@
-package sample;
+package ar;
 
-import sun.reflect.generics.tree.Tree;
-
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class AttributeGroup {
@@ -93,6 +90,22 @@ public class AttributeGroup {
         }
 
         return new AttributeGroup(newAttVals, newEntries);
+    }
+
+    public boolean isSubsetOf(AttributeGroup other) {
+        // This object is a subset of other if every attVal in this is found in other.
+        for (int i = 0; i < this.attVals.size(); i++) {
+            String currItem = this.attVals.get(i);
+            if (currItem == null)
+                continue;
+
+            String otherItem = other.attVals.get(i);
+            if (!currItem.equals(otherItem)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Override

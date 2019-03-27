@@ -1,4 +1,4 @@
-package sample;
+package ar;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -10,7 +10,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("ar.fxml"));
         primaryStage.setTitle("Action Rules Extractor");
         primaryStage.setScene(new Scene(root, 680, 400));
         primaryStage.show();

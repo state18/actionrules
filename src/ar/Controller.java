@@ -1,14 +1,14 @@
-package sample;
+package ar;
 
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.text.Text;
 
-import javax.swing.*;
+import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
+import java.io.PrintStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -36,6 +36,8 @@ public class Controller implements Initializable {
 
     List<ActionRule> actionRules = new ArrayList<>();
 
+    PrintStream outFile;
+
 
     @FXML
     TextField inputDataFile;
@@ -53,17 +55,19 @@ public class Controller implements Initializable {
     TextField confTextField;
 
     @FXML
-    TextField decAttributeTextField;
+    ComboBox<String> decAttributeComboBox;
     @FXML
-    ComboBox<String> decValueFromBox;
+    TextField decValueFromTextField;
     @FXML
-    ComboBox<String> decValueToBox;
+    TextField decValueToTextField;
 
     @FXML
     ListView<String> stableListView;
 
     @Override // This method is called by the FXMLLoader when initialization is complete
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
+        // Note: I've been using this for debugging!
+        /*
         delimiterBox.getItems().setAll("comma", "tab", "space");
 
         stableListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -74,21 +78,21 @@ public class Controller implements Initializable {
 
         delimiterBox.getSelectionModel().selectFirst();
 
-        decAttributeTextField.setText("3");
-        decValueFromBox.getItems().addAll("2");
-        decValueFromBox.getSelectionModel().selectFirst();
-        decValueToBox.getItems().addAll("1");
-        decValueToBox.getSelectionModel().selectFirst();
+        // decAttributeComboBox.setText("3");
+        decValueFromTextField.setText("2");
+        decValueToTextField.setText("1");
 
-        confTextField.setText("100");
+        confTextField.setText("50");
         supportTextField.setText("1");
 
         outputDataFile.setText("C:\\Users\\Sam\\Documents\\ar_output.txt");
+        */
     }
 
     // Expects data and names files to be selected to function
     public void loadInputs() {
-        System.out.println("Load Inputs button pressed.");
+
+        System.out.println("User has pressed Load Inputs button...");
 
         String dataPath = inputDataFile.getText();
         String namePath = inputNameFile.getText();
@@ -130,20 +134,17 @@ public class Controller implements Initializable {
         // Parse Name file.
         attNames = nameContent;
 
+        stableListView.getItems().clear();
         // Update attribute list with names.
         stableListView.getItems().addAll(attNames);
 
-        System.out.println("Input Processing Completed!");
+        decAttributeComboBox.setItems(FXCollections.observableArrayList(attNames));
 
-
+        System.out.println("Finished Loading Input Files!");
     }
 
 
     public void runLERS(ActionEvent actionEvent) {
-        // String[][] s = new String[][] {{"3", "4", "1"}, {"2", "8", "2"}, {"2", "3", "3"}, {"1", "1", "1"}};
-        //String[][] s = new String[][] {{"2", "1", "3", "2"}, {"1", "2", "1", "1"}, {"1", "2", "2", "1"},
-        //        {"1", "1", "1", "2"}, {"2", "2", "2", "2"}, {"1", "2", "3", "2"}};
-
 
         allRules.clear();
         actionRules.clear();
@@ -152,15 +153,24 @@ public class Controller implements Initializable {
         supportThresh = Integer.parseInt(supportTextField.getText());
         confThresh = Double.parseDouble(confTextField.getText()) * .01;
 
-        int decAttribute = Integer.parseInt(decAttributeTextField.getText());
+        decisionAttribute = decAttributeComboBox.getSelectionModel().getSelectedIndex();
 
         stableAttributes = stableListView.getSelectionModel().getSelectedIndices();
 
-        decisionValueFrom = decValueFromBox.getValue();
-        decisionValueTo = decValueToBox.getValue();
+        decisionValueFrom = decValueFromTextField.getText();
+        decisionValueTo = decValueToTextField.getText();
 
-        computeLERS(data, decAttribute);
-        System.out.println("-- Computing Action Rules! --");
+        try {
+            outFile = new PrintStream(new File(outputDataFile.getText()));
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid Output File Path", ButtonType.OK);
+            alert.showAndWait();
+        }
+
+
+        printMessage("\n-- Computing LERS! --\n");
+        computeLERS(data, decisionAttribute);
+        printMessage("\n-- Computing Action Rules! --\n");
         computeActionRules();
     }
 
@@ -240,7 +250,7 @@ public class Controller implements Initializable {
 
         while (setsRemain) {
 
-            System.out.println(String.format("-- Iteration %d --", desiredSize - 1));
+            printMessage(String.format("\n-- Iteration %d --", desiredSize - 1));
 
             List<Rule> currCertainRules = new ArrayList<>();
             List<Rule> currPossibleRules = new ArrayList<>();
@@ -248,6 +258,20 @@ public class Controller implements Initializable {
             List<AttributeGroup> currUnmarked = new ArrayList<>();
 
             for (AttributeGroup attGroup : attributeGroups) {
+
+                // First, check to see if this attribute group contains a subset group in certain rules.
+                // If so, skip this.
+                boolean isSubsetOfMarked = false;
+                for (Rule c : certainRules) {
+                    if (c.attributeGroup.isSubsetOf(attGroup)) {
+                        isSubsetOfMarked = true;
+                        break;
+                    }
+                }
+
+                if (isSubsetOfMarked)
+                    continue;
+
                 for (AttributeGroup decGroup : decisionAttributeGroups) {
 
                     // Find intersection of attGroup and decGroup.
@@ -327,27 +351,34 @@ public class Controller implements Initializable {
             }
 
 
-
             attributeGroups = uniqueAttGroups;
 
 
-            // TODO Print Certain rules.
+            // Print Certain rules.
+            printMessage("\n- CERTAIN RULES -");
+            for(Rule c : currCertainRules) {
+                printMessage(c.toString());
+            }
 
-            // TODO Print Possible rules with support and confidence.
+            // Print Possible rules with support and confidence.
+            printMessage("\n- POSSIBLE RULES -");
+            for(Rule p : currPossibleRules) {
+                printMessage(p.toString());
+            }
 
             certainRules.addAll(uniqueCertainRules);
             possibleRules.addAll(uniquePossibleRules);
 
-
             setsRemain = !uniqueAttGroups.isEmpty();
         }
 
-        System.out.println("No more extraction can be done!");
+        printMessage("No more extraction can be done!");
         allRules.addAll(certainRules);
         allRules.addAll(possibleRules);
 
     }
 
+    // From the LERS certain rules, construct Action Rules from the user input <decision attribute, to value, from value>
     public void computeActionRules() {
         // Look for elements with From
         // Look for elements with To
@@ -363,7 +394,7 @@ public class Controller implements Initializable {
                         // Identify flexible attributes that are different.
 
                         List<String[]> toFromPairs = new ArrayList<>();
-
+                        int numFlexible = 0;
                         for (int k = 0; k < attNames.size(); k++) {
                             String fromVal = fromRule.attributeGroup.attVals.get(k);
                             String toVal = toRule.attributeGroup.attVals.get(k);
@@ -390,16 +421,52 @@ public class Controller implements Initializable {
                                 // It's a flexible attribute.
                                 if (fromVal != null && toVal != null) {
                                     toFromPairs.add(new String[]{Integer.toString(k), fromVal, toVal});
+                                    numFlexible++;
                                 }
 
                             }
                         }
 
-                        ActionRule newAR = new ActionRule(toFromPairs);
+                        if (toFromPairs.isEmpty() || numFlexible == 0)
+                            continue;
+
+                        AttributeGroup fromRuleDec = fromRule.decisionGroup;
+                        AttributeGroup toRuleDec = toRule.decisionGroup;
+
+                        // Encode decision transformation same way as others.
+                        String[] decToFromPair = new String[] {
+                                Integer.toString(decisionAttribute),
+                                fromRuleDec.attVals.get(decisionAttribute),
+                                toRuleDec.attVals.get(decisionAttribute)};
+
+                        ActionRule newAR = new ActionRule(toFromPairs, attNames, decToFromPair);
                         actionRules.add(newAR);
                     }
                 }
             }
         }
+
+        List<ActionRule> uniqueActionRules = new ArrayList<>();
+        for(ActionRule a : actionRules) {
+            if (!uniqueActionRules.contains(a)) {
+                uniqueActionRules.add(a);
+            }
+        }
+
+        actionRules = uniqueActionRules;
+
+        // All rules have been added. Now print them and save to disk!
+        printMessage("\n-- ACTION RULES --\n");
+
+        for(ActionRule a : actionRules) {
+            printMessage(a.toString());
+        }
+
     }
+
+    public void printMessage(String message) {
+        System.out.println(message);
+        outFile.println(message);
+    }
+
 }
